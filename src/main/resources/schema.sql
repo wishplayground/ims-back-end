@@ -16,3 +16,6 @@ CREATE TABLE IF NOT EXISTS teacher_course(
     CONSTRAINT fk_1 FOREIGN KEY (teacher_id) REFERENCES teacher(id),
     CONSTRAINT fk_2 FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
 );
+
+
+INSERT INTO teacher (name, contact) VALUES ('Dasith',contact='021-32323321');
