@@ -114,4 +114,23 @@ public class TeacherHttpController {
             throw new RuntimeException(e);
         }
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{id}")
+    public void deleteTeacher(@PathVariable int id){
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM teacher WHERE id=?");
+            stm.setInt(1,id);
+            ResultSet resultSet = stm.executeQuery();
+            if(!resultSet.next()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not Existing Teacher");
+            }else {
+                PreparedStatement stm1 = connection.prepareStatement("DELETE FROM teacher WHERE id=?");
+                stm1.setInt(1,id);
+                stm1.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
