@@ -92,4 +92,26 @@ public class TeacherHttpController {
         }
 
     }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping(value = "/{id}",consumes = "application/json")
+    public void updateTeacher(@PathVariable int id,@RequestBody TeacherDTO teacher){
+        //chech if exist
+        try (Connection connection = dataSource.getConnection()){
+            PreparedStatement stm = connection.prepareStatement("SELECT * FROM teacher WHERE id=?");
+            stm.setInt(1,id);
+            ResultSet resultSet = stm.executeQuery();
+            if(!resultSet.next()){
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Not Existing Teacher");
+            }else {
+                PreparedStatement stm1 = dataSource.getConnection().prepareStatement("UPDATE teacher SET name=?,contact=? WHERE id=?");
+                stm1.setString(1,teacher.getName());
+                stm1.setString(2,teacher.getContact());
+                stm1.setInt(3,id);
+                stm1.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
